@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { envServer } from './env.server';
+import { envServer, requireServerEnv } from './env.server';
 import { EmailEvent } from '@/models/emailEvent';
 import { connectDb } from './db';
 
@@ -16,11 +16,10 @@ export interface EmailProvider {
 }
 
 class ResendProvider implements EmailProvider {
-  private client = new Resend(envServer.RESEND_API_KEY);
-
   async send(input: SendEmailInput) {
-    const result = await this.client.emails.send({
-      from: envServer.RESEND_FROM_EMAIL,
+    const client = new Resend(requireServerEnv('RESEND_API_KEY'));
+    const result = await client.emails.send({
+      from: requireServerEnv('RESEND_FROM_EMAIL'),
       to: input.to,
       subject: input.subject,
       html: input.html
@@ -38,6 +37,7 @@ export async function sendTransactionalEmail(input: SendEmailInput) {
     userId: input.userId,
     type: input.type,
     recipient: input.to,
+    provider: envServer.RESEND_API_KEY ? 'resend' : 'resend',
     providerMessageId: messageId,
     status: 'sent'
   });
