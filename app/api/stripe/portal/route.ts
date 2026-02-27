@@ -16,9 +16,9 @@ export async function POST() {
     let customerId = sub?.stripeCustomerId || null;
 
     if (!customerId) {
-      const user = await User.findById(auth.session.userId).select('email');
+      const user = await User.findById(auth.session.userId).select('email name');
       if (user?.email) {
-        const customers = await stripe.customers.list({ email: user.email, limit: 3 });
+        const customers = await stripe.customers.list({ email: user.email, limit: 10 });
         const customer = customers.data.find((c) => !c.deleted);
         customerId = customer?.id || null;
 
@@ -53,6 +53,15 @@ export async function POST() {
               );
             }
           }
+        }
+
+        if (!customerId) {
+          const newCustomer = await stripe.customers.create({
+            email: user.email,
+            name: user.name || undefined,
+            metadata: { userId: String(auth.session.userId) }
+          });
+          customerId = newCustomer.id;
         }
       }
     }
