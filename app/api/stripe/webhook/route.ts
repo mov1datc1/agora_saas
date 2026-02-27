@@ -55,7 +55,11 @@ export async function POST(req: Request) {
     }
     case 'customer.subscription.deleted': {
       const sub = event.data.object as Stripe.Subscription;
-      const dbSub = await Subscription.findOneAndUpdate({ stripeSubscriptionId: sub.id }, { status: 'canceled', canceledAt: new Date() }, { new: true });
+      const dbSub = await Subscription.findOneAndUpdate(
+        { stripeSubscriptionId: sub.id },
+        { status: 'canceled', canceledAt: new Date() },
+        { new: true }
+      );
       if (dbSub) await suspendCredential(String(dbSub.userId));
       break;
     }
@@ -66,18 +70,22 @@ export async function POST(req: Request) {
     }
     case 'invoice.paid': {
       const invoice = event.data.object as Stripe.Invoice;
+      const sub = await Subscription.findOne({ stripeCustomerId: String(invoice.customer) });
+      if (!sub) break;
       await Invoice.findOneAndUpdate(
         { stripeInvoiceId: invoice.id },
         {
+          userId: sub.userId,
           stripeInvoiceId: invoice.id,
-          userId: undefined,
           amountDue: invoice.amount_due,
           amountPaid: invoice.amount_paid,
           currency: invoice.currency,
           status: invoice.status,
           hostedInvoiceUrl: invoice.hosted_invoice_url,
           invoicePdf: invoice.invoice_pdf,
-          paidAt: invoice.status_transitions?.paid_at ? new Date(invoice.status_transitions.paid_at * 1000) : null
+          paidAt: invoice.status_transitions?.paid_at ? new Date(invoice.status_transitions.paid_at * 1000) : null,
+          periodStart: invoice.period_start ? new Date(invoice.period_start * 1000) : null,
+          periodEnd: invoice.period_end ? new Date(invoice.period_end * 1000) : null
         },
         { upsert: true }
       );
