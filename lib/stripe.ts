@@ -1,11 +1,20 @@
 import Stripe from 'stripe';
-import { envServer } from './env.server';
+import { requireServerEnv } from './env.server';
 
-export const stripe = new Stripe(envServer.STRIPE_SECRET_KEY);
+let stripeClient: Stripe | null = null;
 
-export const stripePriceMap = {
-  basic_monthly: envServer.STRIPE_PRICE_BASIC_MONTHLY,
-  basic_annual: envServer.STRIPE_PRICE_BASIC_ANNUAL,
-  pro_monthly: envServer.STRIPE_PRICE_PRO_MONTHLY,
-  pro_annual: envServer.STRIPE_PRICE_PRO_ANNUAL
-};
+export function getStripe() {
+  if (!stripeClient) {
+    stripeClient = new Stripe(requireServerEnv('STRIPE_SECRET_KEY'));
+  }
+  return stripeClient;
+}
+
+export function getStripePriceMap() {
+  return {
+    basic_monthly: requireServerEnv('STRIPE_PRICE_BASIC_MONTHLY'),
+    basic_annual: requireServerEnv('STRIPE_PRICE_BASIC_ANNUAL'),
+    pro_monthly: requireServerEnv('STRIPE_PRICE_PRO_MONTHLY'),
+    pro_annual: requireServerEnv('STRIPE_PRICE_PRO_ANNUAL')
+  };
+}
