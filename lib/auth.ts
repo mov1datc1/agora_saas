@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { cookies } from 'next/headers';
-import { env } from './env';
+import { envServer } from './env.server';
 
 const SESSION_COOKIE = 'agora_session';
 
@@ -22,14 +22,14 @@ export function createResetToken() {
 
 function sign(payload: SessionPayload) {
   const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
-  const sig = crypto.createHmac('sha256', env.AUTH_SECRET).update(body).digest('base64url');
+  const sig = crypto.createHmac('sha256', envServer.AUTH_SECRET).update(body).digest('base64url');
   return `${body}.${sig}`;
 }
 
 function verify(token: string): SessionPayload | null {
   const [body, sig] = token.split('.');
   if (!body || !sig) return null;
-  const expected = crypto.createHmac('sha256', env.AUTH_SECRET).update(body).digest('base64url');
+  const expected = crypto.createHmac('sha256', envServer.AUTH_SECRET).update(body).digest('base64url');
   if (sig !== expected) return null;
   const payload = JSON.parse(Buffer.from(body, 'base64url').toString()) as SessionPayload;
   if (payload.exp < Date.now()) return null;
@@ -41,7 +41,7 @@ export async function setSession(userId: string, role: 'customer' | 'admin') {
   (await cookies()).set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: env.NODE_ENV === 'production',
+    secure: envServer.NODE_ENV === 'production',
     path: '/'
   });
 }
