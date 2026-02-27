@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { headers } from 'next/headers';
 import { stripe } from '@/lib/stripe';
-import { env } from '@/lib/env';
+import { envServer } from '@/lib/env.server';
 import { connectDb } from '@/lib/db';
 import { Subscription } from '@/models/subscription';
 import { Invoice } from '@/models/invoice';
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(body, sig, env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(body, sig, envServer.STRIPE_WEBHOOK_SECRET);
   } catch {
     return new Response('Invalid signature', { status: 400 });
   }

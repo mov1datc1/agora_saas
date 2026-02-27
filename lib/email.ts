@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { env } from './env';
+import { envServer } from './env.server';
 import { EmailEvent } from '@/models/emailEvent';
 import { connectDb } from './db';
 
@@ -16,11 +16,11 @@ export interface EmailProvider {
 }
 
 class ResendProvider implements EmailProvider {
-  private client = new Resend(env.RESEND_API_KEY);
+  private client = new Resend(envServer.RESEND_API_KEY);
 
   async send(input: SendEmailInput) {
     const result = await this.client.emails.send({
-      from: env.RESEND_FROM_EMAIL,
+      from: envServer.RESEND_FROM_EMAIL,
       to: input.to,
       subject: input.subject,
       html: input.html

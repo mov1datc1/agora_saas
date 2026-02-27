@@ -3,7 +3,7 @@ import { AccessCredential } from '@/models/accessCredential';
 import { AccessEvent } from '@/models/accessEvent';
 import { User } from '@/models/user';
 import { connectDb } from '@/lib/db';
-import { env } from '@/lib/env';
+import { envServer } from '@/lib/env.server';
 import { sendTransactionalEmail } from '@/lib/email';
 import { credentialApprovedTemplate, suspensionTemplate } from '@/emails/templates';
 
@@ -25,7 +25,7 @@ export async function approveAndSendCredential(userId: string, adminUserId: stri
   );
   const user = await User.findById(userId);
   if (!credential || !user) return null;
-  const msg = credentialApprovedTemplate(user.name, credential.username, credential.temporaryPassword, env.LEGAL_PLATFORM_URL);
+  const msg = credentialApprovedTemplate(user.name, credential.username, credential.temporaryPassword, envServer.LEGAL_PLATFORM_URL);
   await sendTransactionalEmail({ to: user.email, subject: msg.subject, html: msg.html, userId, type: 'credential_approved' });
   await AccessEvent.create({ userId, credentialId: credential._id, eventType: 'credential_sent', actorUserId: adminUserId });
   return credential;
