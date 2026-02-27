@@ -1,0 +1,7 @@
+body { font-family: Inter, Arial, sans-serif; margin: 0; background: #f8fafc; color: #0f172a; }
+.header,.footer { background: #0b1220; color: white; padding: 1rem; }
+nav { display: flex; gap: 1rem; }
+a { color: inherit; }
+.container { max-width: 980px; margin: 0 auto; padding: 2rem; }
+.btn { display: inline-block; background: #2563eb; color: white; padding: .7rem 1.1rem; border-radius: .4rem; text-decoration: none; }
+.card { background: white; border-radius: .5rem; padding: 1rem; margin-bottom: 1rem; }
