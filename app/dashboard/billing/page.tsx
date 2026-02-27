@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { readApiResponse, unwrapData } from '@/lib/client-api';
 
 type MePayload = {
@@ -19,6 +20,7 @@ async function postJson(url: string, body?: Record<string, string>) {
 }
 
 export default function BillingPage() {
+  const router = useRouter();
   const [me, setMe] = useState<MePayload | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -27,11 +29,15 @@ export default function BillingPage() {
     fetch('/api/me')
       .then(async (r) => {
         const payload = await readApiResponse(r);
+        if (r.status === 401) {
+          router.replace('/login');
+          return;
+        }
         if (!r.ok) throw new Error((payload as { error?: string }).error || 'No autorizado');
         setMe(unwrapData<MePayload>(payload));
       })
       .catch((e) => setError(e instanceof Error ? e.message : 'No fue posible cargar tu suscripción.'));
-  }, []);
+  }, [router]);
 
   const startCheckout = async (plan: 'basic' | 'pro', interval: 'monthly' | 'annual') => {
     setError(null);
@@ -64,9 +70,9 @@ export default function BillingPage() {
 
   return (
     <main className="container section">
-      <h1>Subscription & Billing</h1>
+      <h1>Suscripción y facturación</h1>
       <p className="muted-text">
-        Estado actual: {me?.subscription?.status || 'sin suscripción'} · Plan: {me?.subscription?.planKey || '—'} {me?.subscription?.interval || ''}
+        Estado actual: {me?.subscription?.status || 'sin suscripción'} · Plan: {me?.subscription?.planKey || 'sin plan activo'} {me?.subscription?.interval || ''}
       </p>
       {msg && <p className="ok-msg">{msg}</p>}
       {error && <p className="error-msg">{error}</p>}

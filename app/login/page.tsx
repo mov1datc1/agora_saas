@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { readApiResponse } from '@/lib/client-api';
 
@@ -10,6 +10,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/me').then(async (res) => {
+      if (res.ok) {
+        router.replace('/dashboard');
+      }
+    }).catch(() => undefined);
+  }, [router]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,5 +36,5 @@ export default function LoginPage() {
     } finally { setLoading(false); }
   };
 
-  return (<main className="container section"><div className="card auth-card"><h1>Iniciar sesión</h1><form className="form-grid" onSubmit={onSubmit}><label>Email<input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></label><label>Contraseña<input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} /></label>{error && <p className="error-msg">{error}</p>}<button className="btn" type="submit" disabled={loading}>{loading ? 'Ingresando...' : 'Entrar'}</button></form></div></main>);
+  return (<main className="container section"><div className="card auth-card"><h1>Iniciar sesión</h1><p className="muted-text">Ingresa con tu email y contraseña para acceder a tu perfil.</p><form className="form-grid" onSubmit={onSubmit}><label>Email<input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></label><label>Contraseña<input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} /></label>{error && <p className="error-msg">{error}</p>}<button className="btn" type="submit" disabled={loading}>{loading ? 'Ingresando...' : 'Entrar'}</button></form></div></main>);
 }
