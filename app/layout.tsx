@@ -15,7 +15,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div className="container header-inner">
             <AgoraLogo />
             <nav className="nav-links">
-              <Link href="/">Inicio</Link>
+              {!session && <Link href="/">Inicio</Link>}
               {session && <Link href="/dashboard">Dashboard</Link>}
               {session && <Link href="/dashboard/billing">Suscripciones</Link>}
               {session?.role === 'admin' && <Link href="/admin/users">Admin</Link>}

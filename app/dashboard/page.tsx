@@ -12,6 +12,10 @@ export default function DashboardPage() {
   const [data, setData] = useState<MePayload | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const planLabel = data?.subscription?.planKey === 'pro' ? 'Pro' : 'Básico';
+  const statusLabel = data?.subscription?.status ? data.subscription.status : 'active';
+  const statusLabelEs = statusLabel === 'active' ? 'Activo' : statusLabel;
+
   useEffect(() => {
     fetch('/api/me').then(async (res) => {
       const payload = await readApiResponse(res);
@@ -30,7 +34,7 @@ export default function DashboardPage() {
       {error && <p className="error-msg">{error}</p>}
       <div className="grid-three">
         <article className="card"><h3>Cuenta</h3><p>{data?.user?.name || '—'}</p><p className="muted-text">{data?.user?.email || 'Inicia sesión para ver tu perfil.'}</p></article>
-        <article className="card"><h3>Suscripción</h3><p>Plan: {data?.subscription?.planKey || 'Sin plan activo'}</p><p className="muted-text">Estado: {data?.subscription?.status || 'Sin suscripción'}</p><Link className="btn btn-secondary" href="/dashboard/billing">Gestionar pagos</Link></article>
+        <article className="card"><h3>Suscripción</h3><p>Plan: {planLabel}</p><p className="muted-text">Estado: {statusLabelEs}</p><Link className="btn btn-secondary" href="/dashboard/billing">Gestionar pagos</Link></article>
         <article className="card"><h3>Acceso plataforma</h3><p>Estado: {data?.credential?.status || 'Sin credenciales'}</p><Link className="btn btn-secondary" href="/dashboard/access">Ver acceso</Link></article>
       </div>
     </main>
