@@ -123,3 +123,39 @@ input, select {
 .section-actions { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; margin-top: 1rem; }
 .data-table { width: 100%; border-collapse: collapse; }
 .data-table th, .data-table td { text-align: left; border-bottom: 1px solid var(--border); padding: .6rem; }
+
+.admin-shell { display: grid; gap: 1rem; }
+.admin-hero {
+  background: linear-gradient(115deg, #1d1b4f, #303074);
+  color: #fff;
+  border-radius: 18px;
+  padding: 1.2rem;
+  border: 1px solid rgba(255,255,255,.12);
+}
+.admin-hero .eyebrow { color: #ffbfb8; }
+.admin-metrics .metric-card { display: grid; gap: .3rem; }
+.metric-card p { color: var(--muted); margin: 0; }
+.metric-card strong { font-size: 2rem; }
+.admin-toolbar { display: grid; grid-template-columns: 1fr 220px auto; }
+.admin-table td { vertical-align: top; }
+.admin-actions { display: flex; gap: .45rem; flex-wrap: wrap; }
+.status-pill {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: .2rem .55rem;
+  font-size: .85rem;
+  font-weight: 700;
+  text-transform: lowercase;
+  border: 1px solid var(--border);
+  background: #f6f6fa;
+}
+.status-active, .status-trialing { background: #ecfdf3; border-color: #abefc6; color: #067647; }
+.status-suspended { background: #fff1f3; border-color: #fda4af; color: #be123c; }
+.status-past_due { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
+.status-none { background: #f2f4f7; color: #344054; }
+.admin-danger { background: #b42318; color: #fff; border-color: #b42318; }
+.pro-admin-login { border-top: 4px solid var(--brand-dark); }
+
+@media (max-width: 900px) {
+  .admin-toolbar { grid-template-columns: 1fr; }
+}
