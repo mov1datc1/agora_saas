@@ -26,6 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <div className="header-actions">
                 <Link href="/login" className="btn btn-sm btn-secondary">Ingresar</Link>
                 <Link href="/signup" className="btn btn-sm">Prueba gratis</Link>
+                <Link href="/admin/login" className="btn btn-sm btn-secondary">Super Admin</Link>
               </div>
             )}
           </div>

@@ -27,7 +27,9 @@ const envServerSchema = z.object({
   RESEND_FROM_EMAIL: z.string().email().optional(),
   SUPPORT_EMAIL: z.string().email(),
   SUPPORT_WHATSAPP_URL: z.string().url(),
-  LEGAL_PLATFORM_URL: z.string().url()
+  LEGAL_PLATFORM_URL: z.string().url(),
+  ADMIN_OWNER_USERNAME: z.string().min(1).optional(),
+  ADMIN_OWNER_PASSWORD: z.string().min(1).optional()
 });
 
 export const envServer = envServerSchema.parse({
@@ -46,7 +48,9 @@ export const envServer = envServerSchema.parse({
   RESEND_FROM_EMAIL: readEnv('RESEND_FROM_EMAIL'),
   SUPPORT_EMAIL: readEnv('SUPPORT_EMAIL'),
   SUPPORT_WHATSAPP_URL: readEnv('SUPPORT_WHATSAPP_URL'),
-  LEGAL_PLATFORM_URL: readEnv('LEGAL_PLATFORM_URL')
+  LEGAL_PLATFORM_URL: readEnv('LEGAL_PLATFORM_URL'),
+  ADMIN_OWNER_USERNAME: readEnv('ADMIN_OWNER_USERNAME'),
+  ADMIN_OWNER_PASSWORD: readEnv('ADMIN_OWNER_PASSWORD')
 });
 export type EnvServer = z.infer<typeof envServerSchema>;
 
