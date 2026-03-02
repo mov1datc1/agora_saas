@@ -14,7 +14,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <header className="header">
           <div className="container header-inner">
             <AgoraLogo />
-            <nav className="nav-links">
+            <nav className={`nav-links ${session ? 'nav-links-auth' : ''}`}>
               {!session && <Link href="/">Inicio</Link>}
               {session && <Link href="/dashboard">Dashboard</Link>}
               {session && <Link href="/dashboard/billing">Suscripciones</Link>}
