@@ -1,6 +1,6 @@
 export const PRICES = {
-  basic: { monthly: 32, annual: 32 * 12 * 0.8 },
-  pro: { monthly: 64, annual: 64 * 12 * 0.8 }
+  basic: { monthly: 32, annual: 300 },
+  pro: { monthly: 64, annual: 600 }
 } as const;
 
 export type PlanKey = keyof typeof PRICES;
