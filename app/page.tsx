@@ -53,7 +53,7 @@ export default function HomePage() {
               <h3>{plan.name}</h3>
               <p>{plan.description}</p>
               <p><strong>Mensual:</strong> USD {plan.monthly}</p>
-              <p><strong>Anual:</strong> USD {plan.annual} (20% off)</p>
+              <p><strong>Anual:</strong> USD {plan.annual}</p>
               <Link href="/signup" className="btn">Seleccionar {plan.name}</Link>
             </article>
           ))}

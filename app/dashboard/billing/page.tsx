@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { readApiResponse, unwrapData } from '@/lib/client-api';
+import { PRICES } from '@/lib/pricing';
 
 type MePayload = {
   subscription?: { planKey?: string; interval?: string; status?: string };
@@ -79,13 +80,13 @@ export default function BillingPage() {
       <div className="grid-two">
         <div className="card">
           <h3>Basic</h3>
-          <button className="btn" onClick={() => startCheckout('basic', 'monthly')}>Mensual USD 32</button>
-          <button className="btn btn-secondary" onClick={() => startCheckout('basic', 'annual')}>Anual USD 307.2</button>
+          <button className="btn" onClick={() => startCheckout('basic', 'monthly')}>Mensual USD {PRICES.basic.monthly}</button>
+          <button className="btn btn-secondary" onClick={() => startCheckout('basic', 'annual')}>Anual USD {PRICES.basic.annual}</button>
         </div>
         <div className="card">
           <h3>Pro</h3>
-          <button className="btn" onClick={() => startCheckout('pro', 'monthly')}>Mensual USD 64</button>
-          <button className="btn btn-secondary" onClick={() => startCheckout('pro', 'annual')}>Anual USD 614.4</button>
+          <button className="btn" onClick={() => startCheckout('pro', 'monthly')}>Mensual USD {PRICES.pro.monthly}</button>
+          <button className="btn btn-secondary" onClick={() => startCheckout('pro', 'annual')}>Anual USD {PRICES.pro.annual}</button>
         </div>
       </div>
       <div className="card section-actions">

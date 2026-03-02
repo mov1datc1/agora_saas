@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { PRICES, annualSavings, resolvePlanAmount } from '@/lib/pricing';
 
 describe('pricing', () => {
-  it('applies 20% annual discount', () => {
-    expect(PRICES.basic.annual).toBe(307.2);
-    expect(PRICES.pro.annual).toBe(614.4);
+  it('uses fixed annual prices without decimal artifacts', () => {
+    expect(PRICES.basic.annual).toBe(300);
+    expect(PRICES.pro.annual).toBe(600);
   });
 
   it('returns annual savings', () => {
