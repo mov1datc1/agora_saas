@@ -14,11 +14,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <header className="header">
           <div className="container header-inner">
             <AgoraLogo />
-            <nav className={`nav-links ${session ? 'nav-links-auth' : ''}`}>
+            <nav className={`nav-links ${session?.role === 'customer' ? 'nav-links-auth' : ''}`}>
               {!session && <Link href="/">Inicio</Link>}
-              {session && <Link href="/dashboard">Dashboard</Link>}
-              {session && <Link href="/dashboard/billing">Suscripciones</Link>}
-              {session?.role === 'admin' && <Link href="/admin/users">Admin</Link>}
+              {session?.role === 'customer' && <Link href="/dashboard">Dashboard</Link>}
+              {session?.role === 'customer' && <Link href="/dashboard/billing">Suscripciones</Link>}
             </nav>
             {session ? (
               <LogoutButton />
