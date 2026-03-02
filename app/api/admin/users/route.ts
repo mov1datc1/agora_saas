@@ -21,15 +21,31 @@ export async function GET(req: Request) {
     }).select('-passwordHash').sort({ createdAt: -1 }).limit(100);
 
     const userIds = users.map((u) => u._id);
+    const userIdStrings = userIds.map((id) => String(id));
     const [subscriptions, credentials, totalUsers, activeSubscriptions, suspendedSubscriptions] = await Promise.all([
-      Subscription.find({ userId: { $in: userIds } }).sort({ updatedAt: -1 }),
-      AccessCredential.find({ userId: { $in: userIds } }),
+      Subscription.find({
+        $or: [
+          { userId: { $in: userIds } },
+          { $expr: { $in: [{ $toString: '$userId' }, userIdStrings] } }
+        ]
+      }).sort({ updatedAt: -1 }),
+      AccessCredential.find({
+        $or: [
+          { userId: { $in: userIds } },
+          { $expr: { $in: [{ $toString: '$userId' }, userIdStrings] } }
+        ]
+      }),
       User.countDocuments({ deletedAt: null }),
       Subscription.countDocuments({ status: { $in: ['active', 'trialing'] } }),
       Subscription.countDocuments({ status: 'suspended' })
     ]);
 
-    const subByUser = new Map(subscriptions.map((sub) => [String(sub.userId), sub]));
+    const subByUser = new Map<string, (typeof subscriptions)[number]>();
+    for (const sub of subscriptions) {
+      const key = String(sub.userId);
+      if (!subByUser.has(key)) subByUser.set(key, sub);
+    }
+
     const credByUser = new Map(credentials.map((cred) => [String(cred.userId), cred]));
 
     const enrichedUsers = users.map((user) => {
